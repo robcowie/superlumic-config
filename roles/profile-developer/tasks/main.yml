@@ -3,19 +3,19 @@
 - name: tap caskroom/versions
   homebrew_tap: tap=caskroom/versions state=present
 
-- name: install developer brew applications
-  homebrew: name={{item}} state=latest
-  with_items:
-    - wget
-    - pwgen
-    - xmlstarlet
-    - htop
-    - watch
-    - rsync
+- name: tap caskroom/fonts
+  homebrew_tap: tap=caskroom/fonts state=present
 
-- name: install developer cask applications
-  homebrew_cask: name={{item}} state=present
+- name: tap homebrew/core
+  homebrew_tap: tap=homebrew/core state=present
+
+- name: install developer brew applications
+  homebrew: name={{ item }} state=latest
   with_items:
-    - phpstorm
-    - sequel-pro
-    - java
+    - git
+    - sift
+    - wget
+    - htop-osx
+    - tmux
+    - tree
+    - zsh

@@ -5,40 +5,62 @@
 
   tasks:
     - name: install personal cask applications
-      homebrew_cask: name={{item}} state=present
+      homebrew_cask: name={{ item }} state=present
       with_items:
         - spotify
-        - istat-menus
         - dropbox
-        - kaleidoscope
-        - hazel
-        - sonos
-        - tower
-        - superduper
         - google-chrome
-        - keepingyouawake
-        - microsoft-office
-        - iterm2-beta
+        - iterm2
+        - slack
+        - vlc
+        - sequel-pro
+        - caffeine
+        - flux
+        - hipchat
+        - logitech-control-center
+        - mjolnir
+        - trailer
+        - alfred
+        - fantastical
+        - telegram
+        - timer
+        - viscosity
+
+    - name: install personal brew applications
+      homebrew: name={{ item }} state=latest
+      with_items:
+        - awscli
+        - direnv
+        - fasd
+        - lua
+        - pgcli
+        - pv
+        - task
+        - vim
+
     - name: create ssh directory
       become: yes
       file:
-        path: "{{item}}"
+        path: "{{ item }}"
         state: directory
         owner: root
         group: wheel
         mode: 0777
       with_items:
         - /etc/ssh
+
     - name: personal ssh config
       become: yes
       copy:
-        src: files/ssh_config
+        src: files/ssh/ssh_config
         dest: /etc/ssh_config
-    - name: personal ssh config in another location
+
+    - name: personal sshd config
       become: yes
       copy:
-        src: files/ssh_config
-        dest: /etc/ssh/ssh_config
+        src: files/ssh/sshd_config
+        dest: /etc/sshd_config
+
     - name: add to sudoers without password
       become: yes
       lineinfile: >
@@ -48,17 +70,28 @@
         state=present
         create=true
       with_items:
-        - { regexp: '^roderik', line: 'roderik ALL=(ALL) NOPASSWD: ALL' }
+        - { regexp: '^rob', line: 'rob ALL=(ALL) NOPASSWD: ALL' }
+
+    - name: personal git config
+      become: yes
+      copy:
+        src: files/git/gitconfig
+        dest: /Users/{{ username }}/.gitconfig
+
+    - name: personal git ignore
+      become: yes
+      copy:
+        src: files/git/gitignore_global
+        dest: /Users/{{ username }}/.gitignore_global
 
   roles:
-    - profile-all
     - profile-developer
 
   vars:
-    - computername: spectr
-    - git_user_name: Roderik van der Veer
-    - git_user_email: roderik.van.der.veer@kunstmaan.be
-    - php_version: 70
+    - computername: "Rob’s MacBook Pro"
+    - username: rob
+    - git_user_name: Rob Cowie
+    - git_user_email: rob_cowie@mac.com
     - sublime_packages:
         - dest: "SideBarEnhancements"
           repo: "https://github.com/titoBouzout/SideBarEnhancements"
@@ -72,20 +105,11 @@
         - dest: "Theme - Soda"
           repo: "https://github.com/buymeasoda/soda-theme.git"
           version: "master"
-        - dest: "Base16"
-          repo: "https://github.com/chriskempson/base16-textmate.git"
-          version: "master"
-        - dest: "ApplySyntax"
-          repo: "https://github.com/facelessuser/ApplySyntax.git"
-          version: "master"
-        - dest: "SublimeAllAutocomplete"
-          repo: "https://github.com/alienhard/SublimeAllAutocomplete"
-          version: "master"
         - dest: "Ansible"
           repo: "https://github.com/clifford-github/sublime-ansible.git"
           version: "master"
-    - sublime_text_color_scheme: "Packages/Base16/base16-eighties.dark.tmTheme"
-    - sublime_text_theme: "Soda Dark 3.sublime-theme"
+    - sublime_text_color_scheme: "Packages/Material Theme/schemes/Material-Theme.tmTheme"
+    - sublime_text_theme: "Material-Theme.sublime-theme"
     - osx_defaults:
       - domain: 'com.apple.dock'
         key: 'autohide'
@@ -102,7 +126,7 @@
       - domain: 'com.apple.dock'
         key: 'orientation'
         type: string
-        value: left
+        value: bottom
       - domain: 'NSGlobalDomain'
         key: 'NSTableViewDefaultSizeMode'
         type: integer
