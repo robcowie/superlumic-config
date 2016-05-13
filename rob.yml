@@ -88,7 +88,7 @@
     - profile-developer
 
   vars:
-    - computername: "Rob’s MacBook Pro"
+    - computername: "Robs-MBP"
     - username: rob
     - git_user_name: Rob Cowie
     - git_user_email: rob_cowie@mac.com
